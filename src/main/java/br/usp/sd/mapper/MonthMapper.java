@@ -5,8 +5,11 @@ import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
 
 public class MonthMapper extends Mapper<Object, Text, Text, Text> {
+    
+    public static Logger logger = Logger.getLogger(MonthMapper.class);
     
     @Override
     protected void map(Object key, Text value, Mapper<Object, Text, Text, Text>.Context context)

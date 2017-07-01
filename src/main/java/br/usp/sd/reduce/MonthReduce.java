@@ -5,8 +5,11 @@ import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.log4j.Logger;
 
 public class MonthReduce extends Reducer<Text, Text, Text, Text> {
+    
+    public static Logger logger = Logger.getLogger(MonthReduce.class); 
     
     @Override
     protected void reduce(Text key, Iterable<Text> value, Reducer<Text, Text, Text, Text>.Context context)
