@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.log4j.Logger;
 
 import br.usp.sd.mapper.MonthMapper;
+import br.usp.sd.reduce.MonthReduce;
 
 /**
  * Hello world!
@@ -28,7 +29,7 @@ public class App
             job.setJarByClass(App.class);
             job.setMapperClass(MonthMapper.class);
             //job.setCombinerClass(IntSumReducer.class);
-            //job.setReducerClass(IntSumReducer.class);
+            job.setReducerClass(MonthReduce.class);
             job.setOutputKeyClass(Text.class);
             job.setOutputValueClass(Text.class);
             FileInputFormat.addInputPath(job, new Path(args[0]));

@@ -16,19 +16,22 @@ public class MonthMapper extends Mapper<Object, Text, Text, Text> {
             throws IOException, InterruptedException {
         
         StringTokenizer st = new StringTokenizer(value.toString());
+        logger.info("value map: "+value.toString());
         
-        st.nextToken();
-        st.nextToken();
-        
-        String month = st.nextToken().substring(0, 6);
-        StringBuilder data = new StringBuilder();
-        while (st.hasMoreTokens()) {
-            data.append(st.nextToken());
+        if (!st.nextToken().equals("STN---")) { // cabecalho do arquivo
+            st.nextToken();
+            
+            String month = st.nextToken().substring(0, 6);
+            StringBuilder data = new StringBuilder();
+            while (st.hasMoreTokens()) {
+                data.append(st.nextToken()+" ");
+            }
+            
+            Text monthKey = new Text(month);
+            Text dataValue = new Text(data.toString());
+            
+            
+            context.write(monthKey, dataValue);
         }
-        
-        Text monthKey = new Text(month);
-        Text dataValue = new Text(data.toString());
-        
-        context.write(monthKey, dataValue);
     }
 }
