@@ -1,4 +1,5 @@
 package br.usp.sd.reduce;
+//package ep2mapreduce.src.main.java.br.usp.sd.reduce;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -10,6 +11,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.log4j.Logger;
 
 import br.usp.sd.DayData;
+//import ep2mapreduce.src.main.java.br.usp.sd.DayData;
 
 public class MonthReduce extends Reducer<Text, Text, Text, Text> {
     
@@ -30,13 +32,15 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         
         double[] average = calcAverage(data);
         double[] desvio = calcDesvio(data, average);
+        double[][] mmq = calcMMQ(data, average);
         
-        DecimalFormat df = new DecimalFormat("##0.00");
+        DecimalFormat df = new DecimalFormat("#00.00");
         for (int i = 0; i < average.length; i++) {
             if (i > 0) {
                 result.append(" ");
             }
-            result.append(df.format(average[i])+" "+df.format(desvio[i]));
+            result.append(df.format(average[i])+" "+df.format(desvio[i])+
+            		" "+df.format(mmq[i][0]) + " " + df.format(mmq[i][1]));
         }
         
         context.write(key, new Text(result.toString()));
@@ -100,5 +104,43 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         }
         
         return desvio;
+    }
+    
+    public static double[][] calcMMQ(List<String> value, double[] media) {
+        double[][] mmq = new double[media.length][2];
+        double media_dia = (value.size() / 2) + 0.5;
+        double[] top = new double[media.length];
+        double[] bot = new double[media.length];
+        int i;
+        for (String data : value) {
+            DayData dayData = new DayData(data);
+            
+            if (dayData.getTempCount() > 0) {
+            	i = 0;
+            	top[i] += dayData.getDay() * (dayData.getTemp() - media[i]);
+                bot[i] += dayData.getDay() * (dayData.getDay() - media_dia);
+                
+            }
+            if (dayData.getDewpCount() > 0) {
+            	i = 1;
+            	top[i] += dayData.getDay() * (dayData.getDewp() - media[i]);
+                bot[i] += dayData.getDay() * (dayData.getDay() - media_dia);
+            }
+            
+            if (dayData.getWdspCount() > 0) {
+            	i = 2;
+            	top[i] += dayData.getDay() * (dayData.getWdsp() - media[i]);
+                bot[i] += dayData.getDay() * (dayData.getDay() - media_dia);
+            }
+            
+        }
+        
+        for (int ii = 0; ii < top.length; ii++) {
+        	
+        	mmq[ii][1] = top[ii] / bot[ii];
+            mmq[ii][0] = media[ii] - mmq[ii][1] * media_dia;
+        }
+        
+        return mmq;
     }
 }

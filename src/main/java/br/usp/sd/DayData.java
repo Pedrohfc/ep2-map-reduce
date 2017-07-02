@@ -1,4 +1,5 @@
 package br.usp.sd;
+//package ep2mapreduce.src.main.java.br.usp.sd;
 
 import java.util.StringTokenizer;
 
@@ -9,13 +10,14 @@ public class DayData {
     public static Logger logger = Logger.getLogger(DayData.class);
 
     private double temp, dewp, slp, stp, visib, wdsp, mxspd, gust, max, min, prcp, sndp;
-    private int tempCount, dewpCount, slpCount, stpCount, visibCount, wdspCount, frshtt;
+    private int day, tempCount, dewpCount, slpCount, stpCount, visibCount, wdspCount, frshtt;
     private char maxFlag, minFlag, prcpFlag;
     
     public DayData(String data)
     {
         StringTokenizer st = new StringTokenizer(data);
         //logger.info("data: "+data);
+        day = Integer.parseInt(st.nextToken());
         temp = Double.parseDouble(st.nextToken());
         tempCount = Integer.parseInt(st.nextToken());
         dewp = Double.parseDouble(st.nextToken());
@@ -48,6 +50,10 @@ public class DayData {
         sndp = Double.parseDouble(st.nextToken());
         frshtt = Integer.parseInt(st.nextToken());
         
+    }
+    
+    public int getDay(){
+    	return day;
     }
     
     public double getTemp() {

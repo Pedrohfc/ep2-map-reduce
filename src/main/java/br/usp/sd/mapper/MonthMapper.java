@@ -1,4 +1,5 @@
 package br.usp.sd.mapper;
+//package ep2mapreduce.src.main.java.br.usp.sd.mapper;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -21,8 +22,11 @@ public class MonthMapper extends Mapper<Object, Text, Text, Text> {
         if (!st.nextToken().equals("STN---")) { // cabecalho do arquivo
             st.nextToken();
             
-            String month = st.nextToken().substring(0, 6);
+            String ymd = st.nextToken();
+            
+            String month = ymd.substring(0, 6);
             StringBuilder data = new StringBuilder();
+            data.append(ymd.substring(6, 8)+" ");
             while (st.hasMoreTokens()) {
                 data.append(st.nextToken()+" ");
             }

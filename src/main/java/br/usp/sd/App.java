@@ -1,4 +1,7 @@
 package br.usp.sd;
+//package ep2mapreduce.src.main.java.br.usp.sd;
+
+
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -10,11 +13,9 @@ import org.apache.log4j.Logger;
 
 import br.usp.sd.mapper.MonthMapper;
 import br.usp.sd.reduce.MonthReduce;
+//import ep2mapreduce.src.main.java.br.usp.sd.mapper.MonthMapper;
+//import ep2mapreduce.src.main.java.br.usp.sd.reduce.MonthReduce;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
     public static Logger logger = Logger.getLogger(App.class);
