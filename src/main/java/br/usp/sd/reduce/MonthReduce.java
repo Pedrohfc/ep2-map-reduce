@@ -33,6 +33,9 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         double[] average = calcAverage(data);
         double[] desvio = calcDesvio(data, average);
         double[][] mmq = calcMMQ(data, average);
+        double[] variancia = calcVariancia(desvio);
+        double[] cvp = calcCVP(average, desvio);
+
         
         DecimalFormat df = new DecimalFormat("#00.00");
         for (int i = 0; i < average.length; i++) {
@@ -143,4 +146,22 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         
         return mmq;
     }
+
+    public static double[] calcVariancia(double[] desvio) {
+		double[] variancia = new double[desvio.length]; 
+        for (int i = 0; i < variancia.length; i++) {
+			variancia[i] = Math.pow(desvio[i],2)
+        }
+		return variancia;
+    }
+	
+    public static double[] calcCVP(double[] media, double[] desvio) {
+		double[] CVP = new double[desvio.length]; ;
+        for (int i = 0; i < CVP.length; i++) {
+			CVP[i] = (desvio[i]/media[i])*100;
+        }
+		return CVP;
+    }
+
+    
 }
