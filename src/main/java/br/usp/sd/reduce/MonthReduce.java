@@ -31,6 +31,7 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         }
         
         double[] average = calcAverage(data);
+	double[] haverage = calcHarmoAverage(data);
         double[] desvio = calcDesvio(data, average);
         double[][] mmq = calcMMQ(data, average);
         double[] variancia = calcVariancia(desvio);
@@ -42,7 +43,7 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
             if (i > 0) {
                 result.append(" ");
             }
-            result.append(df.format(average[i])+" "+df.format(desvio[i])+
+            result.append(df.format(average[i]) + " " + df.format(haverage[i]) + " " + df.format(desvio[i])+" " + df.format(variancia[i])+" " + df.format(cvp[i])+
             		" "+df.format(mmq[i][0]) + " " + df.format(mmq[i][1]));
         }
         
@@ -78,6 +79,35 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         
         return average;
     }
+
+    public static double[] calcHarmoAverage(List<String> value) {
+        double[] haverage = new double[3];
+        int[] count = new int[3];
+        for (String data : value) {
+            DayData dayData = new DayData(data);
+            if (dayData.getTempCount() > 0) {
+                haverage[0] = haverage[0]+ 1.00/dayData.getTemp();
+                count[0]++;
+            }
+            
+            if (dayData.getDewpCount() > 0) {
+                haverage[1] = haverage[1]+ 1.00/dayData.getDewp();
+                count[1]++;
+            }
+            
+            if (dayData.getWdspCount() > 0) {
+                haverage[2] = haverage[2]+ 1.00/dayData.getWdsp();
+                count[2]++;
+            }
+            
+        }
+        
+        for (int i = 0; i < haverage.length; i++) {
+            haverage[i] = count[i]/haverage[i];
+        }
+        
+        return haverage;
+    }
     
     public static double[] calcDesvio(List<String> value, double[] media) {
         double[] desvio = new double[3];
@@ -108,6 +138,24 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         
         return desvio;
     }
+
+    public static double[] calcVariancia(double[] desvio) {
+	double[] variancia = new double[desvio.length]; 
+        for (int i = 0; i < variancia.length; i++) {
+		variancia[i] = Math.pow(desvio[i],2);
+        }
+	return variancia;
+    }
+	
+    public static double[] calcCVP(double[] media, double[] desvio) {
+	double[] CVP = new double[desvio.length];
+        for (int i = 0; i < CVP.length; i++) {
+		CVP[i] = (desvio[i]/media[i])*100;
+        }
+	return CVP;
+    }
+
+
     
     public static double[][] calcMMQ(List<String> value, double[] media) {
         double[][] mmq = new double[media.length][2];
@@ -147,21 +195,7 @@ public class MonthReduce extends Reducer<Text, Text, Text, Text> {
         return mmq;
     }
 
-    public static double[] calcVariancia(double[] desvio) {
-		double[] variancia = new double[desvio.length]; 
-        for (int i = 0; i < variancia.length; i++) {
-			variancia[i] = Math.pow(desvio[i],2)
-        }
-		return variancia;
-    }
-	
-    public static double[] calcCVP(double[] media, double[] desvio) {
-		double[] CVP = new double[desvio.length]; ;
-        for (int i = 0; i < CVP.length; i++) {
-			CVP[i] = (desvio[i]/media[i])*100;
-        }
-		return CVP;
-    }
+
 
     
 }
