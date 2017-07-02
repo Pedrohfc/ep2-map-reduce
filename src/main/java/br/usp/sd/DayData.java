@@ -15,7 +15,7 @@ public class DayData {
     public DayData(String data)
     {
         StringTokenizer st = new StringTokenizer(data);
-        logger.info("data: "+data);
+        //logger.info("data: "+data);
         temp = Double.parseDouble(st.nextToken());
         tempCount = Integer.parseInt(st.nextToken());
         dewp = Double.parseDouble(st.nextToken());
@@ -41,7 +41,7 @@ public class DayData {
             this.prcp = Double.parseDouble(prcp);
             this.prcpFlag = ' ';
         } catch (Exception e) {
-            logger.info("substring: "+prcp.substring(0, prcp.length()-1));
+            //logger.info("substring: "+prcp.substring(0, prcp.length()-1));
             this.prcp = Double.parseDouble(prcp.substring(0, prcp.length()-1));
             this.prcpFlag = prcp.charAt(prcp.length()-1);
         }
